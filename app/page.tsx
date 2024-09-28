@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,6 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const medicines = [
   {
@@ -55,8 +65,15 @@ const medicines = [
 ];
 
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState<string>("");
   return (
     <div className="container mx-auto">
+      <Input
+        placeholder="Search medicines..."
+        onChange={(e) => setSearchTerm(e.target.value)}
+        value={searchTerm}
+        className="mt-5 mb-10 lg:w-3/4 lg:block mx-auto"
+      />
       <Table>
         <TableCaption>A list of your recent medicines.</TableCaption>
         <TableHeader>
@@ -68,14 +85,28 @@ export default function Home() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {medicines.map((medicine) => (
-            <TableRow key={medicine.name}>
-              <TableCell>{medicine.date}</TableCell>
-              <TableCell className="font-medium">{medicine.name}</TableCell>
-              <TableCell>{medicine.taken}</TableCell>
-              <TableCell className="text-right">{medicine.notes}</TableCell>
-            </TableRow>
-          ))}
+          {medicines
+            .filter((medicine) => medicine.name.includes(searchTerm))
+            .map((medicine) => (
+              <TableRow key={medicine.name}>
+                <TableCell>{medicine.date}</TableCell>
+                <TableCell className="font-medium">{medicine.name}</TableCell>
+                <TableCell>
+                  {
+                    <Select>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Took medicine?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="yes">Yes</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  }
+                </TableCell>
+                <TableCell className="text-right">{medicine.notes}</TableCell>
+              </TableRow>
+            ))}
         </TableBody>
         <TableFooter>
           <TableRow>
