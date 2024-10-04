@@ -67,12 +67,12 @@ const medicines = [
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto lg:px-0 px-2">
       <Input
         placeholder="Search medicines..."
         onChange={(e) => setSearchTerm(e.target.value)}
         value={searchTerm}
-        className="mt-5 mb-10 lg:w-3/4 lg:block mx-auto"
+        className="mt-5 mb-10 lg:block mx-auto"
       />
       <Table>
         <TableCaption>A list of your recent medicines.</TableCaption>
