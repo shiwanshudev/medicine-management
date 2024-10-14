@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -19,55 +19,35 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const medicines = [
-  {
-    name: "Medicine001",
-    taken: "Yes",
-    date: "24/09/2024",
-    notes: "Before bed",
-  },
-  {
-    name: "Medicine002",
-    taken: "No",
-    date: "24/09/2024",
-    notes: "After breakfast",
-  },
-  {
-    name: "Medicine003",
-    taken: "No",
-    date: "24/09/2024",
-    notes: "Bank Transfer",
-  },
-  {
-    name: "Medicine004",
-    taken: "Yes",
-    date: "24/09/2024",
-    notes: "Before bed",
-  },
-  {
-    name: "Medicine005",
-    taken: "Yes",
-    date: "24/09/2024",
-    notes: "After breakfast",
-  },
-  {
-    name: "Medicine006",
-    taken: "No",
-    date: "24/09/2024",
-    notes: "Bank Transfer",
-  },
-  {
-    name: "Medicine007",
-    taken: "No",
-    date: "24/09/2024",
-    notes: "Before bed",
-  },
-];
+type FetchedMedsType = {
+  _id: string;
+  medicineName: string;
+  notes: string;
+  createdAt: string;
+  taken: boolean;
+}[];
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [fetchedMedicines, setFetchedMedicines] = useState<FetchedMedsType>([]);
+
+  useEffect(() => {
+    const fetchMedicines = async () => {
+      const response = await fetch("/api/medicines", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setFetchedMedicines(data);
+    };
+
+    fetchMedicines();
+  }, []);
+
   return (
-    <div className="container mx-auto lg:px-0 px-2">
+    <div className="container mx-auto lg:px-0 px-2 ">
       <Input
         placeholder="Search medicines..."
         onChange={(e) => setSearchTerm(e.target.value)}
@@ -75,22 +55,24 @@ export default function Home() {
         className="mt-5 mb-10 lg:block mx-auto"
       />
       <Table>
-        <TableCaption>A list of your recent medicines.</TableCaption>
+        {/* <TableCaption>A list of your recent medicines.</TableCaption> */}
         <TableHeader>
           <TableRow>
-            <TableHead>Date</TableHead>
+            <TableHead>Created Date</TableHead>
             <TableHead>Medicine Name</TableHead>
             <TableHead>Taken</TableHead>
             <TableHead className="text-right">Notes</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {medicines
-            .filter((medicine) => medicine.name.includes(searchTerm))
+          {fetchedMedicines
+            .filter((medicine) => medicine.medicineName.includes(searchTerm))
             .map((medicine) => (
-              <TableRow key={medicine.name}>
-                <TableCell>{medicine.date}</TableCell>
-                <TableCell className="font-medium">{medicine.name}</TableCell>
+              <TableRow key={medicine.medicineName}>
+                <TableCell>{medicine.createdAt}</TableCell>
+                <TableCell className="font-medium">
+                  {medicine.medicineName}
+                </TableCell>
                 <TableCell>
                   {
                     <Select>
