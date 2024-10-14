@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 export default function AddMedicine() {
   const formSchema = z.object({
     medicineName: z.string().min(2, {
-      message: "medicineName must be at least 2 characters.",
+      message: "Medicine name must be at least 2 characters.",
     }),
     notes: z.string(),
   });
@@ -29,14 +29,24 @@ export default function AddMedicine() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       medicineName: "",
+      notes: "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    const res = await fetch("/api/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const data = await res.json();
+    console.log(data.message);
   }
 
   return (
