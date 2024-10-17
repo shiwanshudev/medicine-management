@@ -19,6 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { format } from "date-fns";
+
 type FetchedMedsType = {
   _id: string;
   medicineName: string;
@@ -30,9 +33,11 @@ type FetchedMedsType = {
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [fetchedMedicines, setFetchedMedicines] = useState<FetchedMedsType>([]);
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     const fetchMedicines = async () => {
+      setLoader(true);
       const response = await fetch("/api/medicines", {
         method: "GET",
         headers: {
@@ -41,6 +46,7 @@ export default function Home() {
       });
       const data = await response.json();
       setFetchedMedicines(data);
+      setLoader(false);
     };
 
     fetchMedicines();
@@ -54,6 +60,11 @@ export default function Home() {
         value={searchTerm}
         className="mt-5 mb-10 lg:block mx-auto"
       />
+      {loader && (
+        <div className="text-center top-2/4 left-2/4 fixed h-screen w-full">
+          <AiOutlineLoading3Quarters className="animate-spin text-2xl block" />
+        </div>
+      )}
       <Table>
         {/* <TableCaption>A list of your recent medicines.</TableCaption> */}
         <TableHeader>
@@ -69,7 +80,9 @@ export default function Home() {
             .filter((medicine) => medicine.medicineName.includes(searchTerm))
             .map((medicine) => (
               <TableRow key={medicine.medicineName}>
-                <TableCell>{medicine.createdAt}</TableCell>
+                <TableCell>
+                  {format(new Date(medicine.createdAt), "dd MMM yyyy")}
+                </TableCell>
                 <TableCell className="font-medium">
                   {medicine.medicineName}
                 </TableCell>

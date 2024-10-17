@@ -16,8 +16,11 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function AddMedicine() {
+  const router = useRouter();
   const formSchema = z.object({
     medicineName: z.string().min(2, {
       message: "Medicine name must be at least 2 characters.",
@@ -46,7 +49,8 @@ export default function AddMedicine() {
       body: JSON.stringify(values),
     });
     const data = await res.json();
-    console.log(data.message);
+    console.log(data);
+    router.push("/");
   }
 
   return (
@@ -86,7 +90,12 @@ export default function AddMedicine() {
               </FormItem>
             )}
           />
-          <Button type="submit">Add</Button>
+          <Button type="submit">
+            {form.formState.isLoading && (
+              <AiOutlineLoading3Quarters className="text-2xl animate-spin mr-1 text-white" />
+            )}
+            Add
+          </Button>
         </form>
       </Form>
     </div>
