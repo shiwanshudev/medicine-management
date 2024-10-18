@@ -4,7 +4,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -20,6 +19,7 @@ import {
 
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 type FetchedMedsType = {
   _id: string;
@@ -34,23 +34,52 @@ export default function Home() {
   const [fetchedMedicines, setFetchedMedicines] = useState<FetchedMedsType>([]);
   const [loader, setLoader] = useState(false);
 
-  useEffect(() => {
-    const fetchMedicines = async () => {
-      setLoader(true);
-      const response = await fetch("/api/medicines", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      setFetchedMedicines(data);
-      setLoader(false);
-    };
+  // Local API Calls
+  const fetchMedicines = async () => {
+    setLoader(true);
+    const response = await fetch("/api/medicines", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    setFetchedMedicines(data);
+    setLoader(false);
+  };
 
+  const updateMedicineTaken = async (value: String, id: String) => {
+    const response = await fetch(`/api/medicines/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ taken: value }),
+    });
+    const data = await response.json();
+    console.log(data);
+    fetchMedicines();
+  };
+
+  useEffect(() => {
     fetchMedicines();
   }, []);
 
+  const handleMedicineTaken = (value: String, id: String) => {
+    updateMedicineTaken(value, id);
+  };
+  const handleDelete = async (id: String) => {
+    const response = await fetch(`/api/medicines/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    fetchMedicines();
+  };
   return (
     <div className="container mx-auto lg:px-0 px-2 ">
       <Input
@@ -71,12 +100,17 @@ export default function Home() {
             <TableHead>Created Date</TableHead>
             <TableHead>Medicine Name</TableHead>
             <TableHead>Taken</TableHead>
-            <TableHead className="text-right">Notes</TableHead>
+            <TableHead>Notes</TableHead>
+            <TableHead>Options</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {fetchedMedicines
-            .filter((medicine) => medicine.medicineName.includes(searchTerm))
+            .filter((medicine) =>
+              medicine.medicineName
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            )
             .map((medicine) => (
               <TableRow key={medicine.medicineName}>
                 <TableCell>
@@ -87,7 +121,12 @@ export default function Home() {
                 </TableCell>
                 <TableCell>
                   {
-                    <Select>
+                    <Select
+                      defaultValue={medicine.taken ? "yes" : "no"}
+                      onValueChange={(e) =>
+                        handleMedicineTaken(e, medicine._id)
+                      }
+                    >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Took medicine?" />
                       </SelectTrigger>
@@ -98,16 +137,18 @@ export default function Home() {
                     </Select>
                   }
                 </TableCell>
-                <TableCell className="text-right">{medicine.notes}</TableCell>
+                <TableCell>{medicine.notes}</TableCell>
+                <TableCell>
+                  <Button
+                    variant={"destructive"}
+                    onClick={() => handleDelete(medicine._id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Today's Status</TableCell>
-            <TableCell className="text-right">All Taken</TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
     </div>
   );
