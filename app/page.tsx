@@ -49,7 +49,7 @@ export default function Home() {
     setLoader(false);
   };
 
-  const updateMedicineTaken = async (value: String, id: String) => {
+  const updateMedicineTaken = async (value: string, id: string) => {
     const response = await fetch(`/api/medicines/${id}`, {
       method: "POST",
       headers: {
@@ -66,10 +66,10 @@ export default function Home() {
     fetchMedicines();
   }, []);
 
-  const handleMedicineTaken = (value: String, id: String) => {
+  const handleMedicineTaken = (value: string, id: string) => {
     updateMedicineTaken(value, id);
   };
-  const handleDelete = async (id: String) => {
+  const handleDelete = async (id: string) => {
     const response = await fetch(`/api/medicines/${id}`, {
       method: "DELETE",
       headers: {
