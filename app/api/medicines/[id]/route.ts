@@ -14,13 +14,12 @@ export async function POST(req: Request, { params }: RequestParamType) {
   //   console.log("API route hit with id: ", params.id);
   try {
     const data = await req.json();
-    const updateVal = data.taken === "yes" ? true : false;
     await connectDB();
 
     const medicneUpdated = await Medicine.findByIdAndUpdate(
       params.id,
       {
-        taken: updateVal,
+        taken: data.taken,
       },
       { new: true }
     );
