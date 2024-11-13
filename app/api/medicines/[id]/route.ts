@@ -44,11 +44,16 @@ export async function DELETE(req: Request, { params }: RequestParamType) {
   try {
     await connectDB();
     const deletedMed = await Medicine.findByIdAndDelete(params.id);
-    console.log(deletedMed);
-    return NextResponse.json(
-      { message: "Succesfully deleted the medicine!" },
-      { status: 200 }
-    );
+    if (deletedMed)
+      return NextResponse.json(
+        { message: "Succesfully deleted the medicine!" },
+        { status: 200 }
+      );
+    else
+      return NextResponse.json(
+        { message: "Error deleting the medicine!" },
+        { status: 400 }
+      );
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Error in request" }, { status: 400 });

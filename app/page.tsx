@@ -39,6 +39,7 @@ export default function Home() {
     setLoader(true);
     const response = await fetch("/api/medicines", {
       method: "GET",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
@@ -52,6 +53,7 @@ export default function Home() {
   const updateMedicineTaken = async (value: string, id: string) => {
     const response = await fetch(`/api/medicines/${id}`, {
       method: "POST",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
@@ -72,6 +74,7 @@ export default function Home() {
   const handleDelete = async (id: string) => {
     const response = await fetch(`/api/medicines/${id}`, {
       method: "DELETE",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
