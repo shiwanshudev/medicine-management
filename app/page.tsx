@@ -115,7 +115,7 @@ export default function Home() {
                 .includes(searchTerm.toLowerCase())
             )
             .map((medicine) => (
-              <TableRow key={medicine.medicineName}>
+              <TableRow key={medicine._id}>
                 <TableCell>
                   {format(new Date(medicine.createdAt), "dd MMM yyyy")}
                 </TableCell>
