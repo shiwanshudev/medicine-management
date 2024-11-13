@@ -18,49 +18,32 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { addMedicine } from "../actions";
 
 export default function AddMedicine() {
   const router = useRouter();
   const formSchema = z.object({
-    medicineName: z.string().min(2, {
+    "medicine-name": z.string().min(2, {
       message: "Medicine name must be at least 2 characters.",
     }),
     notes: z.string(),
   });
-  // 1. Define your form.
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      medicineName: "",
+      "medicine-name": "",
       notes: "",
     },
   });
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    const res = await fetch("/api/submit", {
-      method: "POST",
-      cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-    const data = await res.json();
-    console.log(data);
-    router.push("/");
-  }
-
   return (
     <div className="container mx-auto pt-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form action={addMedicine} className="space-y-8">
           <FormField
             control={form.control}
-            name="medicineName"
+            name="medicine-name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Medicine Name</FormLabel>

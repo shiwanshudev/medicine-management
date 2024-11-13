@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateMed } from "@/app/actions";
+import { updateMed, deleteMed } from "@/app/actions";
 
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { format } from "date-fns";
@@ -36,6 +36,12 @@ export default function MedicineTable({
   initialMedicines: FetchedMedsType;
 }) {
   const [medicines, setMedicines] = useState(initialMedicines);
+  const handleDelete = async (id: string) => {
+    await deleteMed(id);
+    setMedicines((prevMeds) => {
+      return prevMeds.filter((medicine) => medicine._id !== id);
+    });
+  };
   return (
     <div className="container mx-auto lg:px-0 px-2 ">
       {/* <SearchMedicines /> */}
@@ -78,12 +84,12 @@ export default function MedicineTable({
               </TableCell>
               <TableCell>{medicine.notes}</TableCell>
               <TableCell>
-                {/* <Button
-                    variant={"destructive"}
-                    onClick={() => handleDelete(medicine._id)}
-                  >
-                    Delete
-                  </Button> */}
+                <Button
+                  variant={"destructive"}
+                  onClick={() => handleDelete(medicine._id)}
+                >
+                  Delete
+                </Button>
               </TableCell>
             </TableRow>
           ))}
