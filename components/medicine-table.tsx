@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/select";
 import { updateMed, deleteMed } from "@/app/actions";
 
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";

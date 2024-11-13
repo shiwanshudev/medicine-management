@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export const searchQuery = async (formData: FormData) => {
-  const searchTerm = formData.get("search-term");
-};
+// export const searchQuery = async (formData: FormData) => {
+//   const searchTerm = formData.get("search-term");
+// };
 
 export const updateMed = async (taken: string, id: string) => {
   try {

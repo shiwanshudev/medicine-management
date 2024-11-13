@@ -16,12 +16,10 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { addMedicine } from "../actions";
 
 export default function AddMedicine() {
-  const router = useRouter();
   const formSchema = z.object({
     "medicine-name": z.string().min(2, {
       message: "Medicine name must be at least 2 characters.",
