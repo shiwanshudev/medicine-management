@@ -43,6 +43,7 @@ export default function AddMedicine() {
     console.log(values);
     const res = await fetch("/api/submit", {
       method: "POST",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
