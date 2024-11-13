@@ -4,20 +4,18 @@ import { connectDB } from "@/lib/mongodb";
 import Medicine from "@/models/Medicine";
 
 import { NextResponse } from "next/server";
-interface RequestParamType {
-  params: {
-    id: string;
-  };
-}
 
-export async function POST(req: Request, { params }: RequestParamType) {
-  //   console.log("API route hit with id: ", params.id);
+type Params = Promise<{ id: string }>;
+
+export async function POST(req: Request, segmentData: { params: Params }) {
+  const params = await segmentData.params;
+  const id = params.id;
   try {
     const data = await req.json();
     await connectDB();
 
     const medicneUpdated = await Medicine.findByIdAndUpdate(
-      params.id,
+      id,
       {
         taken: data.taken,
       },
@@ -39,10 +37,12 @@ export async function POST(req: Request, { params }: RequestParamType) {
   }
 }
 
-export async function DELETE(req: Request, { params }: RequestParamType) {
+export async function DELETE(req: Request, segmentData: { params: Params }) {
+  const params = await segmentData.params;
+  const id = params.id;
   try {
     await connectDB();
-    const deletedMed = await Medicine.findByIdAndDelete(params.id);
+    const deletedMed = await Medicine.findByIdAndDelete(id);
     console.log(deletedMed);
     return NextResponse.json(
       { message: "Succesfully deleted the medicine!" },

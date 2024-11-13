@@ -6,7 +6,6 @@ export async function GET() {
   try {
     await connectDB(); // Await the database connection
     const medicines = await Medicine.find();
-    console.log(medicines);
     return NextResponse.json(medicines); // Return the response correctly
   } catch (e) {
     console.log(e);
