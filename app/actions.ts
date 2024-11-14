@@ -50,9 +50,8 @@ export const addMedicine = async (formData: FormData) => {
     revalidatePath("/");
   } catch (error) {
     console.log(error, "Error adding medicine.");
-  } finally {
-    redirect("/");
   }
+  redirect("/");
 };
 
 export const deleteMed = async (id: string) => {
