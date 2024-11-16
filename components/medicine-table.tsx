@@ -15,11 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateMed, deleteMed } from "@/app/actions";
+import { Input } from "./ui/input";
+import { updateMed, deleteMed, searchMeds } from "@/app/actions";
 
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import React, { useState } from "react";
 
 type FetchedMedsType = {
   _id: string;
@@ -41,9 +42,19 @@ export default function MedicineTable({
       return prevMeds.filter((medicine) => medicine._id !== id);
     });
   };
+
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const res = await searchMeds(e.target.value);
+    setMedicines(JSON.parse(res));
+  };
+
   return (
     <div className="container mx-auto lg:px-0 px-2 ">
-      {/* <SearchMedicines /> */}
+      <Input
+        onChange={handleSearch}
+        placeholder="Seach Medicines..."
+        className="my-5"
+      />
       <Table>
         {/* <TableCaption>A list of your recent medicines.</TableCaption> */}
         <TableHeader>
