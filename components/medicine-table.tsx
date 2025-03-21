@@ -20,6 +20,7 @@ import { updateMed, deleteMed, searchMeds } from "@/app/actions";
 
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import React, { useState } from "react";
 
 type FetchedMedsType = {
@@ -36,9 +37,12 @@ export default function MedicineTable({
   initialMedicines: FetchedMedsType;
 }) {
   const [medicines, setMedicines] = useState(initialMedicines);
+  const [loadingId, setLoadingId] = useState("");
   const handleDelete = async (id: string) => {
+    setLoadingId(id);
     await deleteMed(id);
     setMedicines((prevMeds) => {
+      setLoadingId("");
       return prevMeds.filter((medicine) => medicine._id !== id);
     });
   };
@@ -98,7 +102,14 @@ export default function MedicineTable({
                   variant={"destructive"}
                   onClick={() => handleDelete(medicine._id)}
                 >
-                  Delete
+                  {loadingId === medicine._id ? (
+                    <span className="flex items-center">
+                      <AiOutlineLoading3Quarters className="text-lg animate-spin mr-1 text-white" />
+                      Deleting...
+                    </span>
+                  ) : (
+                    "Delete"
+                  )}
                 </Button>
               </TableCell>
             </TableRow>
